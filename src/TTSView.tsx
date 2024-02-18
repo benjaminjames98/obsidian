@@ -1,16 +1,20 @@
-import { ItemView } from "obsidian";
+import { App, ItemView } from "obsidian";
 import React from "react";
 import ClientView from "./ui/ClientView";
 import ReactDOM from "react-dom";
 import { AppContext } from "./AppContext";
-
+import { TTSPluginSettings } from "./TTSSettingsTab";
 
 export const TTS_VIEW_TYPE = "tts-view";
 
 export default class TTSView extends ItemView {
+  private readonly settings: TTSPluginSettings;
 
-  constructor(leaf: any) {
+
+  constructor(leaf: any, app: App, settings: TTSPluginSettings) {
     super(leaf);
+    this.app = app;
+    this.settings = settings;
   }
 
   getViewType(): string {
@@ -27,7 +31,10 @@ export default class TTSView extends ItemView {
 
   async onOpen(): Promise<void> {
     const reactComponent = (
-      <AppContext.Provider value={this.app}>
+      <AppContext.Provider value={{
+        app: this.app,
+        settings: this.settings
+      }}>
         <ClientView />
       </AppContext.Provider>
     );

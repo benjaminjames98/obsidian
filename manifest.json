@@ -1,6 +1,6 @@
 {
-  "id": "react-starter",
-  "name": "React Starter",
+  "id": "tts-plugin",
+  "name": "TTS Plugin",
   "description": "Obsidian + ReactJS",
   "version": "0.0.0",
   "author": "Liam Cain",

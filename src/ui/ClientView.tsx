@@ -1,15 +1,16 @@
 import * as React from "react";
 import { useContext } from "react";
 import { AppContext } from "../AppContext";
+import { TFile } from "obsidian";
 import { AirtableClientView } from "./ui-panes/AirtableClientView";
 
 export default function ClientView(): JSX.Element {
-  const app = useContext(AppContext);
+  const { app, settings } = useContext(AppContext);
   const [client, setClient] = React.useState(null);
 
-  const clients = app.vault.getMarkdownFiles()
-    .filter((file) => file.parent?.parent?.name === "Clients")
-    .map((file) => {
+  const clients = app.vault.getFiles()
+    .filter((file: TFile): boolean => file.parent?.parent?.name === "Clients")
+    .map((file: TFile): { name: string, path: string } => {
       return {
         name: file.parent.name,
         path: file.parent.path
@@ -25,16 +26,19 @@ export default function ClientView(): JSX.Element {
     <>
       <h1 style={{ textAlign: "center" }}>TassieTech Client Portal</h1>
       <select onChange={(e) => clientSelected(e.target.value)}
-              value={client}
               style={{ width: "100%" }}
       >
-        {clients.map((client) => (
-          <option value={client.name}>{client.name}</option>
+        {clients.map((client: any) => (
+          <option value={client.name} key={client.name}>{client.name}</option>
         ))}
       </select>
 
       <h2>{client}</h2>
-      <AirtableClientView client={client} />
+      <AirtableClientView
+        clientName={client}
+        api_key={settings.AIRTABLE_API_KEY}
+        base_id={settings.AIRTABLE_BASE_ID}
+      />
       {/*<MattermostClientView client={client} />*/}
       {/*<XeroProjectsClientView client={client} />*/}
     </>
